@@ -1,3 +1,4 @@
+
 import java.util.Date;
 
 /**
@@ -25,69 +26,119 @@ public class StudentGroup implements StudentArrayOperation {
 
 	@Override
 	public Student[] getStudents() {
-		// Add your implementation here
-		return null;
+		return students;
 	}
 
 	@Override
-	public void setStudents(Student[] students) {
-		// Add your implementation here
+	public void setStudents(Student[] students) throws IllegalArgumentException {
+		if(students == null) {
+			throw new IllegalArgumentException();
+		}
+		this.students = students;
 	}
 
 	@Override
 	public Student getStudent(int index) {
-		// Add your implementation here
-		return null;
+		checkIndex(index);
+		return this.students[index];
 	}
 
 	@Override
 	public void setStudent(Student student, int index) {
-		// Add your implementation here
+		checkIndex(index);
+		checkStudent(student);
+		this.students[index] = student;
 	}
 
 	@Override
 	public void addFirst(Student student) {
-		// Add your implementation here
+		checkStudent(student);
+		Student[] modifiedGroup = new Student[this.students.length + 1];
+		modifiedGroup[0] = student;
+		for(int i = 0; i < this.students.length; i++) {
+			modifiedGroup[i+1] = this.students[i];
+		}
+		this.students = modifiedGroup;
 	}
 
 	@Override
 	public void addLast(Student student) {
-		// Add your implementation here
+		checkStudent(student);
+		Student[] modifiedGroup = new Student[this.students.length + 1];
+		modifiedGroup[modifiedGroup.length - 1] = student;
+		for(int i = 0; i < this.students.length; i++) {
+			modifiedGroup[i] = this.students[i];
+		}
+		this.students = modifiedGroup;
 	}
 
 	@Override
 	public void add(Student student, int index) {
-		// Add your implementation here
+		checkIndex(index);
+		checkStudent(student);
+		Student[] modifiedGroup = new Student[this.students.length + 1];
+		modifiedGroup[index] = student;
+		for(int i = 0; i < index; i++) {
+			modifiedGroup[i] = this.students[i];
+        }
+        for(int j = index + 1; j < modifiedGroup.length; j++) {
+        	modifiedGroup[j] = this.students[j-1];
+        }
+        this.students = modifiedGroup;
 	}
 
 	@Override
 	public void remove(int index) {
-		// Add your implementation here
+		checkIndex(index);
+		Student[] modifiedGroup = new Student[this.students.length - 1];
+		for(int i = 0; i < index; i++) {
+			modifiedGroup[i] = this.students[i];
+		}
+		for(int j = index+1; j < this.students.length; j++) {
+			modifiedGroup[j - 1] = this.students[j];
+		}
+		this.students = modifiedGroup;
 	}
 
 	@Override
 	public void remove(Student student) {
-		// Add your implementation here
+		checkStudent(student);
+		int index = getIndexOfElement(student);
+		remove(index);
 	}
 
 	@Override
 	public void removeFromIndex(int index) {
-		// Add your implementation here
+		checkIndex(index);
+		Student[] modifiedGroup = new Student[index + 1];
+		for(int i =0 ; i <= index; i++) {
+			modifiedGroup[i] = this.students[i];
+		}
+		this.students = modifiedGroup;
 	}
 
 	@Override
 	public void removeFromElement(Student student) {
-		// Add your implementation here
+		checkStudent(student);
+		int index = getIndexOfElement(student);
+		removeFromIndex(index);
 	}
 
 	@Override
 	public void removeToIndex(int index) {
-		// Add your implementation here
+		checkIndex(index);
+		Student[] modifiedGroup = new Student[this.students.length - index];
+		for(int i = 0 ; i <= modifiedGroup.length; i++) {
+			modifiedGroup[i] = this.students[index + i];
+		}
+		this.students = modifiedGroup;
 	}
 
 	@Override
 	public void removeToElement(Student student) {
-		// Add your implementation here
+		checkStudent(student);
+		int index = getIndexOfElement(student);
+		removeToIndex(index);
 	}
 
 	@Override
@@ -136,4 +187,32 @@ public class StudentGroup implements StudentArrayOperation {
 		// Add your implementation here
 		return null;
 	}
+	
+	private void checkIndex(int index) {
+		if(index < 0 || index >= this.students.length) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	private void checkStudent(Student student) {
+		if(student == null) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	private int getIndexOfElement(Student student) {
+		int index = -1;
+		for(int i = 0; i < this.students.length; i++) {
+			if(this.students[i].equals(student)) {
+				index = i;
+				break;
+			}
+		}
+		if(index == -1) {
+			throw new IllegalArgumentException("Student does not exist");
+		}
+		return index;
+	}
 }
+
+
